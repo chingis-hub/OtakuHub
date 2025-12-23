@@ -6,6 +6,8 @@ import com.chingis.animehub.entity.Review
 import com.chingis.animehub.repository.AnimeRepository
 import com.chingis.animehub.repository.ReviewRepository
 import com.chingis.animehub.repository.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,8 +20,9 @@ class ReviewService(
 ) {
 
     @Transactional
-    fun create(dto: CreateReviewDto, userId: Long): Review {
+    suspend fun create(dto: CreateReviewDto, userId: Long): Review = withContext(Dispatchers.IO) {
         val anime = animeRepository.findByTitle(dto.animeTitle)
+
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User $userId not found") }
 
@@ -40,10 +43,12 @@ class ReviewService(
         }
 
         animeRepository.save(anime)
-        return savedReview
+        savedReview
     }
 
-    fun getAllReviews(): List<Review> {
-        return reviewRepository.findAll()
+
+    suspend fun getAllReviews(): List<Review> =
+        withContext(Dispatchers.IO) {
+        reviewRepository.findAll()
     }
 }

@@ -1,4 +1,3 @@
-// AnimeController.kt
 package com.chingis.animehub.controller
 
 import com.chingis.animehub.dto.CreateAnimeDto
@@ -15,7 +14,7 @@ class AnimeController(
     private val service: AnimeService
 ) {
     @PostMapping
-    fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
+    suspend fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
         val anime = Anime(
             title = dto.title,
             description = dto.description,
@@ -26,13 +25,13 @@ class AnimeController(
     }
 
     @GetMapping("/title/{title}")
-    fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
+    suspend fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
         val anime = service.getByTitle(title)
         return mapToDTO(anime)
     }
 
     @GetMapping
-    fun getAll(): List<AnimeResponseDTO> {
+    suspend fun getAll(): List<AnimeResponseDTO> {
         return service.getAll().map { mapToDTO(it) }
     }
 

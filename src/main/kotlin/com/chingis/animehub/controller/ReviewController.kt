@@ -14,7 +14,7 @@ class ReviewController(
 ) {
 
     @PostMapping
-    fun create(
+    suspend fun create(
         @RequestBody dto: CreateReviewDto,
         @RequestParam userId: Long
     ): ReviewResponseDTO {
@@ -26,7 +26,7 @@ class ReviewController(
     }
 
     @GetMapping
-    fun getAllReviews(): List<ReviewResponseDTO> {
+    suspend fun getAllReviews(): List<ReviewResponseDTO> {
         val reviews = service.getAllReviews()
         return reviews.map { review ->
             ReviewResponseDTO(

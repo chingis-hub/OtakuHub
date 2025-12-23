@@ -16,7 +16,7 @@ class UserController(
 ) {
 
     @PostMapping
-    fun create(@RequestBody dto: CreateUserDto) : User {
+    suspend fun create(@RequestBody dto: CreateUserDto) : User {
         val user = User(
             name = dto.name,
             email = dto.email
@@ -25,15 +25,16 @@ class UserController(
     }
 
     @GetMapping
-    fun getAll() = service.getAll()
+    suspend fun getAll() = service.getAll()
+
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long) = service.getById(id)
+    suspend fun getById(@PathVariable id: Long) = service.getById(id)
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody user: User) =
-        service.update(id, user)
+    suspend fun update(@PathVariable id: Long, @RequestBody user: User) = service.update(id, user)
+
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) = service.delete(id)
+    suspend fun delete(@PathVariable id: Long) = service.delete(id)
 }

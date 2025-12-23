@@ -4,24 +4,40 @@ import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
 import org.springframework.stereotype.Service
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Service
 class UserService(
     private val repository: UserRepository
 ) {
 
-    fun create(user: User) = repository.save(user)
+    suspend fun create(user: User) =
+        withContext(Dispatchers.IO) {
+            repository.save(user)
+        }
 
-    fun getAll(): List<User> = repository.findAll()
+    suspend fun getAll(): List<User> =
+        withContext(Dispatchers.IO) {
+            repository.findAll()
+        }
 
-    fun getById(id: Long) = repository.findById(id).orElse(null)
+    // repository.findById — блокирующий вызов. любые методы JPA, типа save, delete, findAll — синхронные и блокирующие.
+    // withContext(Dispatchers.IO) выполняет его в отдельном потоке, основной поток сервера
+    suspend fun getById(id: Long) =
+        withContext(Dispatchers.IO) {
+            repository.findById(id).orElse(null)
+        }
 
-    fun update(id: Long, updated: User): User? {
-        return repository.findById(id).map {
+    suspend fun update(id: Long, updated: User): User? = withContext(Dispatchers.IO) {
+        repository.findById(id).map {
             val user = it.copy(name = updated.name, email = updated.email)
             repository.save(user)
         }.orElse(null)
     }
 
-    fun delete(id: Long) = repository.deleteById(id)
+    suspend fun delete(id: Long) =
+        withContext(Dispatchers.IO) {
+            repository.deleteById(id)
+        }
 }
