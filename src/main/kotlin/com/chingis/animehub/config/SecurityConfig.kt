@@ -20,10 +20,12 @@ class SecurityConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
+            .headers { headers ->
+                headers.frameOptions { it.disable() }
+            }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/**").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
             }
         // Добавить JWT filter configuration сюда
 
