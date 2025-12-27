@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository
 //  Long → тип первичного ключа (id у User)
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
-    suspend fun findByName(username: String): User?
-    suspend fun findByEmail(email: String): User?
+    fun findByName(username: String): User?
+    fun findByEmail(email: String): User?
 }

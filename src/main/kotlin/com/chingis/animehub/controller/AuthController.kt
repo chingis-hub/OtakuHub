@@ -12,8 +12,8 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    suspend fun register(@RequestBody dto: RegisterRequestDto) = authService.register(dto)
+    fun register(@RequestBody dto: RegisterRequestDto) = authService.register(dto)
 
     @PostMapping("/login")
-    suspend fun login(@RequestBody dto: LoginRequestDto) = authService.login(dto)
+    fun login(@RequestBody dto: LoginRequestDto) = authService.login(dto)
 }

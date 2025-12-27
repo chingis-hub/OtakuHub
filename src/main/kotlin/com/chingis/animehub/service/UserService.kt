@@ -4,40 +4,29 @@ import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
 import org.springframework.stereotype.Service
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Service
 class UserService(
     private val repository: UserRepository
 ) {
 
-    suspend fun create(user: User) =
-        withContext(Dispatchers.IO) {
-            repository.save(user)
-        }
+    fun create(user: User) = repository.save(user)
 
-    suspend fun getAll(): List<User> =
-        withContext(Dispatchers.IO) {
-            repository.findAll()
-        }
 
-    // repository.findById — блокирующий вызов. любые методы JPA, типа save, delete, findAll — синхронные и блокирующие.
-    // withContext(Dispatchers.IO) выполняет его в отдельном потоке, основной поток сервера
-    suspend fun getById(id: Long) =
-        withContext(Dispatchers.IO) {
-            repository.findById(id).orElse(null)
-        }
+    fun getAll(): List<User> = repository.findAll()
 
-    suspend fun update(id: Long, updated: User): User? = withContext(Dispatchers.IO) {
-        repository.findById(id).map {
-            val user = it.copy(name = updated.name, email = updated.email)
-            repository.save(user)
-        }.orElse(null)
+    // В Spring MVC с JPA каждый HTTP-запрос получает поток Tomcat, который остаётся занятымие suspend с Dispatchers.IO лишь перекладывает блокировку на другой поток, не освобождая исходный.
+    // В итоге реальной асинхронности нет, и на один запрос расходуются два потока, что не даёт преимуществ.
+   fun getById(id: Long) = repository.findById(id).orElse(null)
+
+    fun update(id: Long, updated: User): User? {
+        val existingUser = repository.findById(id).orElse(null) ?: return null
+        val userToSave = existingUser.copy(
+            name = updated.name,
+            email = updated.email
+        )
+        return repository.save(userToSave)
     }
 
-    suspend fun delete(id: Long) =
-        withContext(Dispatchers.IO) {
-            repository.deleteById(id)
-        }
+    fun delete(id: Long) = repository.deleteById(id)
 }

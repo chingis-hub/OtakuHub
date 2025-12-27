@@ -14,7 +14,7 @@ class AnimeController(
     private val service: AnimeService
 ) {
     @PostMapping
-    suspend fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
+    fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
         val anime = Anime(
             title = dto.title,
             description = dto.description,
@@ -25,13 +25,13 @@ class AnimeController(
     }
 
     @GetMapping("/title/{title}")
-    suspend fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
+    fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
         val anime = service.getByTitle(title)
         return mapToDTO(anime)
     }
 
     @GetMapping
-    suspend fun getAll(): List<AnimeResponseDTO> {
+    fun getAll(): List<AnimeResponseDTO> {
         return service.getAll().map { mapToDTO(it) }
     }
 
