@@ -4,6 +4,7 @@ import com.chingis.animehub.dto.LoginRequestDto
 import com.chingis.animehub.dto.RegisterRequestDto
 import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
+import com.chingis.animehub.response_dto.JwtResponseDto
 
 
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -16,7 +17,8 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class AuthService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtService: JwtService
 ) {
 
     fun register(dto: RegisterRequestDto): User {
@@ -40,7 +42,7 @@ class AuthService(
         return userRepository.save(user)
     }
 
-    fun login(dto: LoginRequestDto): String {
+    fun login(dto: LoginRequestDto): JwtResponseDto {
         val user = userRepository.findByName(dto.username)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User is not found")
 
@@ -48,6 +50,8 @@ class AuthService(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password")
         }
 
-        return "JWT_TOKEN_PLACEHOLDER"
+        val token = jwtService.generateToken(user)
+
+        return JwtResponseDto(token)
     }
 }

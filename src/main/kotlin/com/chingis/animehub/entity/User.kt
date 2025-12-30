@@ -17,7 +17,12 @@ data class User(
     @Enumerated(EnumType.STRING)
     var role: Role = Role.ANONYMOUS,
 
+    @Column(unique = true, nullable = false)
     var name: String = "",
+
+    @Column(unique = true, nullable = false)
     var email: String = "",
+
+    @Column(nullable = false)
     var password: String = ""
 )

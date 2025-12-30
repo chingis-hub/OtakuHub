@@ -5,6 +5,7 @@ import com.chingis.animehub.entity.Anime
 import com.chingis.animehub.response_dto.AnimeResponseDTO
 import com.chingis.animehub.response_dto.ReviewResponseDTO
 import com.chingis.animehub.service.AnimeService
+import org.springframework.security.access.prepost.PreAuthorize
 
 import org.springframework.web.bind.annotation.*
 
@@ -14,6 +15,7 @@ class AnimeController(
     private val service: AnimeService
 ) {
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
         val anime = Anime(
             title = dto.title,
@@ -31,6 +33,7 @@ class AnimeController(
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     fun getAll(): List<AnimeResponseDTO> {
         return service.getAll().map { mapToDTO(it) }
     }

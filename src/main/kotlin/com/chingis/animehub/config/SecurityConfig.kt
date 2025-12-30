@@ -1,22 +1,28 @@
 package com.chingis.animehub.config
 
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import com.chingis.animehub.JwtAuthenticationFilter
+import org.springframework.context.annotation.*
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+    private val jwtAuthFilter: JwtAuthenticationFilter
+) {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
+    // Говорит, какие фильтры, в каком порядке и с какими правилами работают.
+    // Без него Spring использовал бы дефолтные настройки.
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
@@ -25,9 +31,18 @@ class SecurityConfig {
             }
             .authorizeHttpRequests { auth ->
                 auth
-                    .anyRequest().permitAll()
+                    // запросы пропускаются без Authentication
+                    .requestMatchers("/auth/**", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    // все остальные требуют Authentication
+                    .anyRequest().authenticated()
             }
-        // Добавить JWT filter configuration сюда
+            // Сервер не хранит Authentication или другую информацию о пользователе между запросами
+            // так как смысла нет помнить инфу предудыших запросов поэтому и Stateless
+            // из этого следует что нет нагрузки на память из-за пользователей
+            .sessionManagement { session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
