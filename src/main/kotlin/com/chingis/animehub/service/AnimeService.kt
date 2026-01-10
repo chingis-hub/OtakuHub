@@ -8,7 +8,17 @@ import org.springframework.stereotype.Service
 class AnimeService(
     private val repository: AnimeRepository
 ) {
-   fun create(anime: Anime): Anime = repository.save(anime)
+    fun create(anime: Anime): Anime {
+        return repository.save(anime)
+    }
+
+    fun update(id: Long, anime: Anime): Anime {
+        return repository.save(anime)
+    }
+
+    fun delete(id: Long) {
+        repository.deleteById(id)
+    }
 
     fun getByTitle(title: String) = repository.findByTitle(title)
 
