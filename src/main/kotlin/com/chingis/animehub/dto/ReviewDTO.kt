@@ -5,3 +5,8 @@ data class CreateReviewDto(
     val content: String,
     val score: Int
 )
+
+data class UpdateReviewDto(
+    val content: String,
+    val score: Int
+)

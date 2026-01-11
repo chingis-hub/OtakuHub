@@ -7,7 +7,9 @@ enum class Role {
         override fun permissions() = setOf(
             Permission.ANIME_READ,
             Permission.REVIEW_READ,
-            Permission.REVIEW_CREATE
+            Permission.REVIEW_CREATE,
+            Permission.REVIEW_UPDATE,
+            Permission.REVIEW_DELETE
         )
     },
     ADMIN {

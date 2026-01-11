@@ -66,6 +66,7 @@ class AnimeController(
             genre = anime.genre,
             reviews = anime.reviews.map {
                 ReviewResponseDTO(
+                    id = it.id,
                     content = it.content,
                     score = it.score
                 )

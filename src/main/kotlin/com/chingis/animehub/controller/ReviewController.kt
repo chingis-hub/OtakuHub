@@ -1,7 +1,7 @@
 // ReviewController.kt
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.CreateReviewDto
+import com.chingis.animehub.dto.*
 import com.chingis.animehub.response_dto.ReviewResponseDTO
 import com.chingis.animehub.service.ReviewService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -24,8 +24,34 @@ class ReviewController(
     ): ReviewResponseDTO {
         val review = service.create(dto, userId)
         return ReviewResponseDTO(
+            id = review.id,
             content = review.content,
             score = review.score
         )
     }
+
+    @PutMapping("/{reviewId}")
+    @PreAuthorize("hasAuthority('PERMISSION_REVIEW_UPDATE')")
+    fun update(
+        @PathVariable reviewId: Long,
+        @RequestBody dto: UpdateReviewDto,
+        @RequestParam userId: Long
+    ): ReviewResponseDTO {
+        val review = service.update(reviewId, dto, userId)
+        return ReviewResponseDTO(
+            id = review.id,
+            content = review.content,
+            score = review.score
+        )
+    }
+
+    @DeleteMapping("/{reviewId}")
+    @PreAuthorize("hasAuthority('PERMISSION_REVIEW_DELETE')")
+    fun delete(
+        @PathVariable reviewId: Long,
+        @RequestParam userId: Long
+    ) {
+        service.delete(reviewId, userId)
+    }
+
 }
