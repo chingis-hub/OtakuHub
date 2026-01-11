@@ -15,9 +15,9 @@ class ReviewController(
 ) {
 
     @PostMapping
-    // Spring Security требует у пользователя определенную роль,
+    // Spring Security требует у пользователя определенные возможности,
     // чтобы получить доступ к конкретному эндпоинту.
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_REVIEW_CREATE')")
     fun create(
         @RequestBody dto: CreateReviewDto,
         @RequestParam userId: Long
@@ -27,17 +27,5 @@ class ReviewController(
             content = review.content,
             score = review.score
         )
-    }
-
-    @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    fun getAllReviews(): List<ReviewResponseDTO> {
-        val reviews = service.getAllReviews()
-        return reviews.map { review ->
-            ReviewResponseDTO(
-                content = review.content,
-                score = review.score
-            )
-        }
     }
 }

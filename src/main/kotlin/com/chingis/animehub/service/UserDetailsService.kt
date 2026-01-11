@@ -15,10 +15,21 @@ class CustomUserDetailsService(
         val user = userRepository.findByName(username)
             ?: throw UsernameNotFoundException("User not found with username: $username")
 
+        // создаем список разрешений
+        val authorities = mutableListOf<SimpleGrantedAuthority>()
+
+        // добавляем в список роль юзера
+        authorities.add(SimpleGrantedAuthority("ROLE_${user.role.name}"))
+
+        // добавляем все разрешения юзера которые определяются его ролью
+        user.role.permissions().forEach { permission ->
+            authorities.add(SimpleGrantedAuthority("PERMISSION_${permission.name}"))
+        }
+
         return User.builder()
             .username(user.name)
             .password(user.password)
-            .authorities(SimpleGrantedAuthority("ROLE_${user.role.name}"))
+            .authorities(authorities)
             .build()
     }
 }

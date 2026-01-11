@@ -2,6 +2,7 @@ package com.chingis.animehub.config
 
 import com.chingis.animehub.JwtAuthenticationFilter
 import org.springframework.context.annotation.*
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -33,6 +34,8 @@ class SecurityConfig(
                 auth
                     // запросы пропускаются без Authentication
                     .requestMatchers("/auth/**", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    // разрешаем анонимам исп методы чтения аниме
+                    .requestMatchers(HttpMethod.GET, "/animes/**").permitAll()
                     // все остальные требуют Authentication
                     .anyRequest().authenticated()
             }

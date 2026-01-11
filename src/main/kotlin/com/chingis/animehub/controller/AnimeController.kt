@@ -15,7 +15,7 @@ class AnimeController(
     private val service: AnimeService
 ) {
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_CREATE')")
     fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
         val anime = Anime(
             title = dto.title,
@@ -27,13 +27,14 @@ class AnimeController(
     }
 
     @GetMapping("/title/{title}")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
     fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
         val anime = service.getByTitle(title)
         return mapToDTO(anime)
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_UPDATE')")
     fun update(@PathVariable id: Long, @RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
         val anime = Anime(
             id = id,
@@ -46,13 +47,13 @@ class AnimeController(
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_DELETE')")
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
     fun getAll(): List<AnimeResponseDTO> {
         return service.getAll().map { mapToDTO(it) }
     }

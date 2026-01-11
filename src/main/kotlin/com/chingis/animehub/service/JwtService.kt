@@ -35,6 +35,7 @@ class JwtService(
         return Jwts.builder()
             .setSubject(user.name)
             .claim("roles", user.role.name)
+            .claim("permissions", user.role.permissions().map { it.name })
             .setIssuedAt(now)
             .setExpiration(expiryDate)
             .signWith(key, SignatureAlgorithm.HS256)
