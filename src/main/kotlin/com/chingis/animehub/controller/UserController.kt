@@ -43,4 +43,8 @@ class UserController(
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     fun delete(@PathVariable id: Long) = service.delete(id)
+
+    @PutMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun changeUserRole(@PathVariable id: Long) = service.change(id)
 }

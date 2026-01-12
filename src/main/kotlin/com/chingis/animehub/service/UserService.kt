@@ -1,5 +1,6 @@
 package com.chingis.animehub.service
 
+import com.chingis.animehub.entity.Role
 import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -29,4 +30,12 @@ class UserService(
     }
 
     fun delete(id: Long) = repository.deleteById(id)
+
+    fun change(id: Long) {
+        val user = repository.findById(id)
+            .orElseThrow { RuntimeException("User not found") }
+
+        user.role = Role.ADMIN
+        repository.save(user)
+    }
 }
