@@ -9,6 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 
 import org.springframework.web.bind.annotation.*
 
+import org.springframework.http.MediaType
+import org.springframework.web.multipart.MultipartFile
+
 @RestController
 @RequestMapping("/animes")
 class AnimeController(
@@ -62,6 +65,7 @@ class AnimeController(
         return AnimeResponseDTO(
             id = anime.id,
             title = anime.title,
+            imageUrl = anime.imageUrl,
             description = anime.description,
             genre = anime.genre,
             reviews = anime.reviews.map {
@@ -73,5 +77,12 @@ class AnimeController(
             },
             rating = anime.rating
         )
+    }
+
+    @PostMapping("/{id}/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PreAuthorize("hasRole('ADMIN')")
+    fun uploadImage(@PathVariable id: Long, @RequestPart("file") file: MultipartFile): AnimeResponseDTO {
+        val anime = service.uploadImage(id, file)
+        return mapToDTO(anime)
     }
 }
