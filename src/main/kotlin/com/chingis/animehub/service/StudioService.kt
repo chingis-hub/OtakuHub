@@ -3,29 +3,31 @@ package com.chingis.animehub.service
 import com.chingis.animehub.dto.CreateStudioDto
 import com.chingis.animehub.entity.Studio
 import com.chingis.animehub.repository.StudioRepository
+import com.chingis.animehub.response_dto.StudioResponseDTO
 import org.springframework.stereotype.Service
 
 @Service
 class StudioService(
     private val repository: StudioRepository
 ) {
-    fun create(dto: CreateStudioDto): Studio {
+    fun create(dto: CreateStudioDto): StudioResponseDTO {
         val studio = Studio(
             name = dto.name,
             description = dto.description
         )
-        return repository.save(studio)
+        val savedStudio = repository.save(studio)
+        return mapToDTO(savedStudio)
     }
 
-    fun update(id: Long, dto: CreateStudioDto): Studio {
-
+    fun update(id: Long, dto: CreateStudioDto): StudioResponseDTO {
         val studio = repository.findById(id)
             .orElseThrow { RuntimeException("Studio not found") }
 
         studio.name = dto.name
         studio.description = dto.description
 
-        return studio
+        val updatedStudio = repository.save(studio)
+        return mapToDTO(updatedStudio)
     }
 
     fun delete(id: Long) {
@@ -35,11 +37,19 @@ class StudioService(
         repository.deleteById(id)
     }
 
-    fun getById(id: Long): Studio {
-        return repository.findById(id)
+    fun getById(id: Long): StudioResponseDTO {
+        val studio = repository.findById(id)
             .orElseThrow { RuntimeException("Studio not found") }
+        return mapToDTO(studio)
     }
 
-    fun getAll(): List<Studio> = repository.findAll()
+    fun getAll(): List<StudioResponseDTO> = repository.findAll().map { mapToDTO(it) }
 
+    fun mapToDTO(studio: Studio): StudioResponseDTO {
+        return StudioResponseDTO(
+            id = studio.id,
+            name = studio.name,
+            description = studio.description
+        )
+    }
 }

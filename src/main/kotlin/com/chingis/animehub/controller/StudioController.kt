@@ -1,7 +1,7 @@
 package com.chingis.animehub.controller
 
 import com.chingis.animehub.dto.CreateStudioDto
-import com.chingis.animehub.entity.Studio
+import com.chingis.animehub.response_dto.StudioResponseDTO
 import com.chingis.animehub.service.StudioService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -13,13 +13,13 @@ class StudioController(
 ) {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun create(@RequestBody dto: CreateStudioDto): Studio {
+    fun create(@RequestBody dto: CreateStudioDto): StudioResponseDTO {
         return service.create(dto)
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    fun update(@PathVariable id: Long, @RequestBody dto: CreateStudioDto): Studio {
+    fun update(@PathVariable id: Long, @RequestBody dto: CreateStudioDto): StudioResponseDTO {
         return service.update(id, dto)
     }
 
@@ -32,13 +32,13 @@ class StudioController(
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    fun getById(@PathVariable id: Long): Studio {
+    fun getById(@PathVariable id: Long): StudioResponseDTO {
         return service.getById(id)
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAll(): List<Studio> {
+    fun getAll(): List<StudioResponseDTO> {
         return service.getAll()
     }
 }
