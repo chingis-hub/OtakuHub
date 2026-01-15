@@ -1,12 +1,10 @@
 package com.chingis.animehub.controller
 
 import com.chingis.animehub.dto.CreateAnimeDto
-import com.chingis.animehub.entity.Anime
+import com.chingis.animehub.dto.UpdateAnimeDto
 import com.chingis.animehub.response_dto.AnimeResponseDTO
-import com.chingis.animehub.response_dto.ReviewResponseDTO
 import com.chingis.animehub.service.AnimeService
 import org.springframework.security.access.prepost.PreAuthorize
-
 import org.springframework.web.bind.annotation.*
 
 import org.springframework.http.MediaType
@@ -20,33 +18,18 @@ class AnimeController(
     @PostMapping
     @PreAuthorize("hasAuthority('PERMISSION_ANIME_CREATE')")
     fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
-        val anime = Anime(
-            title = dto.title,
-            description = dto.description,
-            genre = dto.genre
-        )
-        val savedAnime = service.create(anime)
-        return mapToDTO(savedAnime)
+        return service.create(dto)
     }
 
     @GetMapping("/title/{title}")
     @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
     fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
-        val anime = service.getByTitle(title)
-        return mapToDTO(anime)
+        return service.getByTitle(title)
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('PERMISSION_ANIME_UPDATE')")
-    fun update(@PathVariable id: Long, @RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
-        val anime = Anime(
-            id = id,
-            title = dto.title,
-            description = dto.description,
-            genre = dto.genre
-        )
-        val updatedAnime = service.update(id, anime)
-        return mapToDTO(updatedAnime)
+    fun update(@PathVariable id: Long, @RequestBody dto: UpdateAnimeDto): AnimeResponseDTO {
+        return service.update(id, dto)
     }
 
     @DeleteMapping("/{id}")
@@ -58,31 +41,12 @@ class AnimeController(
     @GetMapping
     @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
     fun getAll(): List<AnimeResponseDTO> {
-        return service.getAll().map { mapToDTO(it) }
-    }
-
-    private fun mapToDTO(anime: Anime): AnimeResponseDTO {
-        return AnimeResponseDTO(
-            id = anime.id,
-            title = anime.title,
-            imageUrl = anime.imageUrl,
-            description = anime.description,
-            genre = anime.genre,
-            reviews = anime.reviews.map {
-                ReviewResponseDTO(
-                    id = it.id,
-                    content = it.content,
-                    score = it.score
-                )
-            },
-            rating = anime.rating
-        )
+        return service.getAll()
     }
 
     @PostMapping("/{id}/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @PreAuthorize("hasRole('ADMIN')")
     fun uploadImage(@PathVariable id: Long, @RequestPart("file") file: MultipartFile): AnimeResponseDTO {
-        val anime = service.uploadImage(id, file)
-        return mapToDTO(anime)
+        return service.uploadImage(id, file)
     }
 }

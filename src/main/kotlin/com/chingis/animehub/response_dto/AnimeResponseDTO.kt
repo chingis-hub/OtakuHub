@@ -8,5 +8,6 @@ data class AnimeResponseDTO(
     val description: String,
     val genre: String,
     val reviews: List<ReviewResponseDTO>,
-    val rating: Double
+    val rating: Double,
+    val studio: StudioResponseDTO?
 )

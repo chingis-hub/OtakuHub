@@ -1,7 +1,13 @@
 package com.chingis.animehub.service
 
+import com.chingis.animehub.dto.CreateAnimeDto
+import com.chingis.animehub.dto.UpdateAnimeDto
 import com.chingis.animehub.entity.Anime
 import com.chingis.animehub.repository.AnimeRepository
+import com.chingis.animehub.repository.StudioRepository
+import com.chingis.animehub.response_dto.AnimeResponseDTO
+import com.chingis.animehub.response_dto.ReviewResponseDTO
+import com.chingis.animehub.response_dto.StudioResponseDTO
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
@@ -10,30 +16,49 @@ import java.nio.file.StandardCopyOption
 
 @Service
 class AnimeService(
-    private val repository: AnimeRepository
+    private val repository: AnimeRepository,
+    private val studioRepository: StudioRepository
 ) {
-    fun create(anime: Anime): Anime {
-        return repository.save(anime)
+    fun create(dto: CreateAnimeDto): AnimeResponseDTO {
+        val studio = studioRepository.findByName(dto.studio)
+            ?: throw RuntimeException("Studio with name '${dto.studio}' not found")
+
+        val anime = Anime(
+            title = dto.title,
+            description = dto.description,
+            genre = dto.genre,
+            studio = studio
+        )
+
+        val savedAnime = repository.save(anime)
+        return mapToDTO(savedAnime)
     }
 
-    fun update(id: Long, anime: Anime): Anime {
-        // проверка на существование
-        if (!repository.existsById(id)) {
-            throw RuntimeException("Anime not found with id: $id")
-        }
-        return repository.save(anime)
+    fun update(id: Long, dto: UpdateAnimeDto): AnimeResponseDTO {
+        val anime = repository.findById(id)
+            .orElseThrow { RuntimeException("Anime not found") }
+
+        anime.title = dto.title
+        anime.description = dto.description
+        anime.genre = dto.genre
+
+        val newStudio = studioRepository.findByName(dto.studio)
+            ?: throw RuntimeException("Studio with name '${dto.studio}' not found")
+        anime.studio = newStudio
+
+        val updatedAnime = repository.save(anime)
+        return mapToDTO(updatedAnime)
     }
 
     fun delete(id: Long) {
         repository.deleteById(id)
     }
 
-    fun getByTitle(title: String) = repository.findByTitle(title)
+    fun getByTitle(title: String): AnimeResponseDTO = mapToDTO(repository.findByTitle(title))
 
-    fun getAll(): List<Anime> = repository.findAll()
+    fun getAll(): List<AnimeResponseDTO> = repository.findAll().map { mapToDTO(it) }
 
-    fun uploadImage(id: Long, file: MultipartFile): Anime {
-
+    fun uploadImage(id: Long, file: MultipartFile): AnimeResponseDTO {
         // Проверка типа файла
         val allowedTypes = listOf("image/jpeg", "image/png", "image/gif")
         if (!allowedTypes.contains(file.contentType)) {
@@ -60,6 +85,32 @@ class AnimeService(
         // Обновляем URL в anime
         anime.imageUrl = "/images/$fileName"
 
-        return repository.save(anime)
+        val savedAnime = repository.save(anime)
+        return mapToDTO(savedAnime)
+    }
+
+    fun mapToDTO(anime: Anime): AnimeResponseDTO {
+        return AnimeResponseDTO(
+            id = anime.id,
+            title = anime.title,
+            imageUrl = anime.imageUrl,
+            description = anime.description,
+            genre = anime.genre,
+            reviews = anime.reviews.map {
+                ReviewResponseDTO(
+                    id = it.id,
+                    content = it.content,
+                    score = it.score
+                )
+            },
+            rating = anime.rating,
+            studio = anime.studio?.let {
+                StudioResponseDTO(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description
+                )
+            }
+        )
     }
 }

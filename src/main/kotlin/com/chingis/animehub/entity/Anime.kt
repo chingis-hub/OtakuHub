@@ -1,5 +1,6 @@
 package com.chingis.animehub.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
@@ -24,9 +25,15 @@ data class Anime(
     @OneToMany(mappedBy = "anime", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JsonManagedReference
     var reviews: MutableList<Review> = mutableListOf(),
+
     var rating: Double = 0.0,
 
     // новое поля для картинок тайтлов
     @Column(unique = true, nullable = true)
-    var imageUrl: String? = null
+    var imageUrl: String? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "studio_id")
+    @JsonBackReference
+    var studio: Studio? = null
 )
