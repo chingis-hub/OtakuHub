@@ -6,8 +6,8 @@ import com.chingis.animehub.entity.Anime
 import com.chingis.animehub.repository.AnimeRepository
 import com.chingis.animehub.repository.StudioRepository
 import com.chingis.animehub.response_dto.AnimeResponseDTO
+import com.chingis.animehub.response_dto.AnimeStudioResponseDTO
 import com.chingis.animehub.response_dto.ReviewResponseDTO
-import com.chingis.animehub.response_dto.StudioResponseDTO
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
@@ -20,8 +20,8 @@ class AnimeService(
     private val studioRepository: StudioRepository
 ) {
     fun create(dto: CreateAnimeDto): AnimeResponseDTO {
-        val studio = studioRepository.findByName(dto.studio)
-            ?: throw RuntimeException("Studio with name '${dto.studio}' not found")
+        val studio = studioRepository.findById(dto.studioId)
+            .orElseThrow { RuntimeException("Studio with id '${dto.studioId}' not found") }
 
         val anime = Anime(
             title = dto.title,
@@ -42,9 +42,14 @@ class AnimeService(
         anime.description = dto.description
         anime.genre = dto.genre
 
-        val newStudio = studioRepository.findByName(dto.studio)
-            ?: throw RuntimeException("Studio with name '${dto.studio}' not found")
-        anime.studio = newStudio
+        val newStudio = studioRepository.findById(dto.studioId)
+            .orElseThrow { RuntimeException("Studio with id '${dto.studioId}' not found") }
+
+        if (anime.studio?.id != newStudio.id) {
+            anime.studio?.animes?.remove(anime)
+
+            newStudio.animes.add(anime)
+        }
 
         val updatedAnime = repository.save(anime)
         return mapToDTO(updatedAnime)
@@ -105,12 +110,11 @@ class AnimeService(
             },
             rating = anime.rating,
             studio = anime.studio?.let {
-                StudioResponseDTO(
+                AnimeStudioResponseDTO(
                     id = it.id,
-                    name = it.name,
-                    description = it.description
+                    name = it.name
                 )
-            }
+            } ?: throw RuntimeException("Anime must have a studio")
         )
     }
 }

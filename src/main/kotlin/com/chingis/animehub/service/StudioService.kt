@@ -49,7 +49,8 @@ class StudioService(
         return StudioResponseDTO(
             id = studio.id,
             name = studio.name,
-            description = studio.description
+            description = studio.description,
+            animes = studio.animes.map { it.title }
         )
     }
 }
