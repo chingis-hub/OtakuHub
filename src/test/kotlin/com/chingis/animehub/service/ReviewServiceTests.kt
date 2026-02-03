@@ -87,7 +87,7 @@ class ReviewServiceTests {
 
         // Then
         assertThat(result.content).isEqualTo("Great anime!")
-        assertThat(result.score).isEqualTo(4.5)
+        assertThat(result.score).isEqualTo(4)
 
         verify(animeRepository).findByTitle("Test Anime")
         verify(userRepository).findById(1L)
@@ -115,7 +115,7 @@ class ReviewServiceTests {
 
         // Then
         assertThat(result.content).isEqualTo("Updated review")
-        assertThat(result.score).isEqualTo(5.0)
+        assertThat(result.score).isEqualTo(5)
 
         verify(reviewRepository).findById(1L)
         verify(reviewRepository).save(any())

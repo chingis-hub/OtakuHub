@@ -19,7 +19,7 @@ class Anime(
 
     // mappedBy указывает, что сущность Review владеет связью, а именно поле Review.anime
     @OneToMany(mappedBy = "anime", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    val reviews: MutableList<Review> = mutableListOf(),
+    var reviews: MutableList<Review> = mutableListOf(),
 
     var rating: Double = 0.0,
 
