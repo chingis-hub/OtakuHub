@@ -1,6 +1,6 @@
 package com.chingis.animehub.dto.auth_dto
 
-data class RegisterRequestDto(
+data class RegisterRequestDTO(
     val username: String,
     val email: String,
     val password: String

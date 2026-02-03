@@ -1,7 +1,7 @@
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.auth_dto.LoginRequestDto
-import com.chingis.animehub.dto.auth_dto.RegisterRequestDto
+import com.chingis.animehub.dto.auth_dto.LoginRequestDTO
+import com.chingis.animehub.dto.auth_dto.RegisterRequestDTO
 import com.chingis.animehub.service.AuthService
 import org.springframework.web.bind.annotation.*
 
@@ -12,8 +12,8 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    fun register(@RequestBody dto: RegisterRequestDto) = authService.register(dto)
+    fun register(@RequestBody dto: RegisterRequestDTO) = authService.register(dto)
 
     @PostMapping("/login")
-    fun login(@RequestBody dto: LoginRequestDto) = authService.login(dto)
+    fun login(@RequestBody dto: LoginRequestDTO) = authService.login(dto)
 }

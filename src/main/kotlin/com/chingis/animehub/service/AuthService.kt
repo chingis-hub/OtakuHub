@@ -1,10 +1,10 @@
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.auth_dto.LoginRequestDto
-import com.chingis.animehub.dto.auth_dto.RegisterRequestDto
+import com.chingis.animehub.dto.auth_dto.LoginRequestDTO
+import com.chingis.animehub.dto.auth_dto.RegisterRequestDTO
 import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
-import com.chingis.animehub.dto.response_dto.JwtResponseDto
+import com.chingis.animehub.dto.response_dto.JwtResponseDTO
 
 
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,7 +21,7 @@ class AuthService(
     private val jwtService: JwtService
 ) {
 
-    fun register(dto: RegisterRequestDto): User {
+    fun register(dto: RegisterRequestDTO): User {
         if (userRepository.findByName(dto.username) != null) {
             throw ResponseStatusException(HttpStatus.CONFLICT, "Username already exists")
         }
@@ -42,7 +42,7 @@ class AuthService(
         return userRepository.save(user)
     }
 
-    fun login(dto: LoginRequestDto): JwtResponseDto {
+    fun login(dto: LoginRequestDTO): JwtResponseDTO {
         val user = userRepository.findByName(dto.username)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User is not found")
 
@@ -52,6 +52,6 @@ class AuthService(
 
         val token = jwtService.generateToken(user)
 
-        return JwtResponseDto(token)
+        return JwtResponseDTO(token)
     }
 }
