@@ -59,11 +59,12 @@ class ReviewService(
 
         // обновляем рейтинг
         val anime = review.anime
-        if (anime != null) {
-            anime.rating = anime.reviews.map { it.score }.average()
-            // сохраняем в бд аниме с новым отзывом
-            animeRepository.save(anime)
-        }
+
+        anime.rating = anime.reviews.map { it.score }.average()
+
+        // сохраняем в бд аниме с новым отзывом
+        animeRepository.save(anime)
+
 
         return savedReview
     }
@@ -80,13 +81,14 @@ class ReviewService(
 
         // убираем отзыв
         val anime = review.anime
-        if (anime != null) {
-            // убираем отзыв из списка аниме
-            anime.reviews.remove(review)
-            // пересчитываем рейтинг
-            anime.rating = if (anime.reviews.isEmpty()) 0.0 else anime.reviews.map { it.score }.average()
-            animeRepository.save(anime)
-        }
+
+        // убираем отзыв из списка аниме
+        anime.reviews.remove(review)
+
+        // пересчитываем рейтинг
+        anime.rating = if (anime.reviews.isEmpty()) 0.0 else anime.reviews.map { it.score }.average()
+
+        animeRepository.save(anime)
 
         // удаляем отзыв из бд
         reviewRepository.deleteById(reviewId)
