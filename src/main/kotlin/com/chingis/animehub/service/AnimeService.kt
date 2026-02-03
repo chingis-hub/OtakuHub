@@ -1,13 +1,13 @@
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.CreateAnimeDto
-import com.chingis.animehub.dto.UpdateAnimeDto
+import com.chingis.animehub.dto.create_dto.CreateAnimeDto
+import com.chingis.animehub.dto.update_dto.UpdateAnimeDto
 import com.chingis.animehub.entity.Anime
 import com.chingis.animehub.repository.AnimeRepository
 import com.chingis.animehub.repository.StudioRepository
-import com.chingis.animehub.response_dto.AnimeResponseDTO
-import com.chingis.animehub.response_dto.AnimeStudioResponseDTO
-import com.chingis.animehub.response_dto.ReviewResponseDTO
+import com.chingis.animehub.dto.response_dto.AnimeResponseDTO
+import com.chingis.animehub.dto.response_dto.AnimeStudioResponseDTO
+import com.chingis.animehub.dto.response_dto.ReviewResponseDTO
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files

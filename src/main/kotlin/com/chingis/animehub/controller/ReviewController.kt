@@ -1,8 +1,9 @@
 // ReviewController.kt
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.*
-import com.chingis.animehub.response_dto.ReviewResponseDTO
+import com.chingis.animehub.dto.create_dto.CreateReviewDto
+import com.chingis.animehub.dto.update_dto.UpdateReviewDto
+import com.chingis.animehub.dto.response_dto.ReviewResponseDTO
 import com.chingis.animehub.service.ReviewService
 import org.springframework.security.access.prepost.PreAuthorize
 

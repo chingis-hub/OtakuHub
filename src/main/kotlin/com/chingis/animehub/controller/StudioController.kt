@@ -1,7 +1,7 @@
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.CreateStudioDto
-import com.chingis.animehub.response_dto.StudioResponseDTO
+import com.chingis.animehub.dto.create_dto.CreateStudioDto
+import com.chingis.animehub.dto.response_dto.StudioResponseDTO
 import com.chingis.animehub.service.StudioService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*

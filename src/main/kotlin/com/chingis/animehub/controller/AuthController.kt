@@ -1,7 +1,7 @@
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.LoginRequestDto
-import com.chingis.animehub.dto.RegisterRequestDto
+import com.chingis.animehub.dto.auth_dto.LoginRequestDto
+import com.chingis.animehub.dto.auth_dto.RegisterRequestDto
 import com.chingis.animehub.service.AuthService
 import org.springframework.web.bind.annotation.*
 

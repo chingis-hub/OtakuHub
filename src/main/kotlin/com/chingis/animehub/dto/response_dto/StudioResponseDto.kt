@@ -1,4 +1,4 @@
-package com.chingis.animehub.response_dto
+package com.chingis.animehub.dto.response_dto
 
 data class StudioResponseDTO(
     val id: Long,

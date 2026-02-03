@@ -1,10 +1,10 @@
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.LoginRequestDto
-import com.chingis.animehub.dto.RegisterRequestDto
+import com.chingis.animehub.dto.auth_dto.LoginRequestDto
+import com.chingis.animehub.dto.auth_dto.RegisterRequestDto
 import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
-import com.chingis.animehub.response_dto.JwtResponseDto
+import com.chingis.animehub.dto.response_dto.JwtResponseDto
 
 
 import org.springframework.security.crypto.password.PasswordEncoder

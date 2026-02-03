@@ -1,6 +1,6 @@
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.CreateUserDto
+import com.chingis.animehub.dto.create_dto.CreateUserDto
 import com.chingis.animehub.entity.User
 import com.chingis.animehub.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize

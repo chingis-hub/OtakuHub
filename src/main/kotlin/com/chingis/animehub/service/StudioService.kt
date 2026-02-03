@@ -1,9 +1,9 @@
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.CreateStudioDto
+import com.chingis.animehub.dto.create_dto.CreateStudioDto
 import com.chingis.animehub.entity.Studio
 import com.chingis.animehub.repository.StudioRepository
-import com.chingis.animehub.response_dto.StudioResponseDTO
+import com.chingis.animehub.dto.response_dto.StudioResponseDTO
 import org.springframework.stereotype.Service
 
 @Service

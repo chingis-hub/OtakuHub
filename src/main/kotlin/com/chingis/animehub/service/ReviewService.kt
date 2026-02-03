@@ -1,7 +1,8 @@
 // ReviewService.kt
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.*
+import com.chingis.animehub.dto.create_dto.CreateReviewDto
+import com.chingis.animehub.dto.update_dto.UpdateReviewDto
 import com.chingis.animehub.entity.Review
 import com.chingis.animehub.repository.*
 
@@ -45,7 +46,7 @@ class ReviewService(
             .orElseThrow { IllegalArgumentException("Review $reviewId not found") }
 
         // является ли юзер владельцем этого отзыва
-        if (review.user?.id != userId) {
+        if (review.user.id != userId) {
             throw IllegalArgumentException("User $userId is not authorized to update this review")
         }
 
@@ -73,7 +74,7 @@ class ReviewService(
             .orElseThrow { IllegalArgumentException("Review $reviewId not found") }
 
         // является ли юзер владельцем этого отзыва
-        if (review.user?.id != userId) {
+        if (review.user.id != userId) {
             throw IllegalArgumentException("User $userId is not authorized to delete this review")
         }
 
