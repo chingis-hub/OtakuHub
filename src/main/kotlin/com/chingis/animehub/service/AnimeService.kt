@@ -1,7 +1,7 @@
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.create_dto.CreateAnimeDto
-import com.chingis.animehub.dto.update_dto.UpdateAnimeDto
+import com.chingis.animehub.dto.create_dto.AnimeCreateDTO
+import com.chingis.animehub.dto.update_dto.AnimeUpdateDTO
 import com.chingis.animehub.entity.Anime
 import com.chingis.animehub.repository.AnimeRepository
 import com.chingis.animehub.repository.StudioRepository
@@ -19,7 +19,7 @@ class AnimeService(
     private val repository: AnimeRepository,
     private val studioRepository: StudioRepository
 ) {
-    fun create(dto: CreateAnimeDto): AnimeResponseDTO {
+    fun create(dto: AnimeCreateDTO): AnimeResponseDTO {
         val studio = studioRepository.findById(dto.studioId)
             .orElseThrow { RuntimeException("Studio with id '${dto.studioId}' not found") }
 
@@ -34,7 +34,7 @@ class AnimeService(
         return mapToDTO(savedAnime)
     }
 
-    fun update(id: Long, dto: UpdateAnimeDto): AnimeResponseDTO {
+    fun update(id: Long, dto: AnimeUpdateDTO): AnimeResponseDTO {
         val anime = repository.findById(id)
             .orElseThrow { RuntimeException("Anime not found") }
 

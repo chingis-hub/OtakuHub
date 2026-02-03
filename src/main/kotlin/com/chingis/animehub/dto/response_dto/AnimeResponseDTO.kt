@@ -1,6 +1,5 @@
 package com.chingis.animehub.dto.response_dto
 
-
 data class AnimeResponseDTO(
     val id: Long,
     val title: String,

@@ -1,8 +1,8 @@
 // ReviewService.kt
 package com.chingis.animehub.service
 
-import com.chingis.animehub.dto.create_dto.CreateReviewDto
-import com.chingis.animehub.dto.update_dto.UpdateReviewDto
+import com.chingis.animehub.dto.create_dto.ReviewCreateDTO
+import com.chingis.animehub.dto.update_dto.ReviewUpdateDTO
 import com.chingis.animehub.entity.Review
 import com.chingis.animehub.repository.*
 
@@ -18,7 +18,7 @@ class ReviewService(
 ) {
 
     @Transactional
-    fun create(dto: CreateReviewDto, userId: Long): Review {
+    fun create(dto: ReviewCreateDTO, userId: Long): Review {
         val anime = animeRepository.findByTitle(dto.animeTitle)
 
         val user = userRepository.findById(userId)
@@ -41,7 +41,7 @@ class ReviewService(
     }
 
     @Transactional
-    fun update(reviewId: Long, dto: UpdateReviewDto, userId: Long): Review {
+    fun update(reviewId: Long, dto: ReviewUpdateDTO, userId: Long): Review {
         val review = reviewRepository.findById(reviewId)
             .orElseThrow { IllegalArgumentException("Review $reviewId not found") }
 

@@ -1,7 +1,7 @@
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.create_dto.CreateAnimeDto
-import com.chingis.animehub.dto.update_dto.UpdateAnimeDto
+import com.chingis.animehub.dto.create_dto.AnimeCreateDTO
+import com.chingis.animehub.dto.update_dto.AnimeUpdateDTO
 import com.chingis.animehub.dto.response_dto.AnimeResponseDTO
 import com.chingis.animehub.service.AnimeService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -17,7 +17,7 @@ class AnimeController(
 ) {
     @PostMapping
     @PreAuthorize("hasAuthority('PERMISSION_ANIME_CREATE')")
-    fun create(@RequestBody dto: CreateAnimeDto): AnimeResponseDTO {
+    fun create(@RequestBody dto: AnimeCreateDTO): AnimeResponseDTO {
         return service.create(dto)
     }
 
@@ -28,7 +28,7 @@ class AnimeController(
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody dto: UpdateAnimeDto): AnimeResponseDTO {
+    fun update(@PathVariable id: Long, @RequestBody dto: AnimeUpdateDTO): AnimeResponseDTO {
         return service.update(id, dto)
     }
 

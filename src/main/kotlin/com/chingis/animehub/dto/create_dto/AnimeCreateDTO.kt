@@ -1,6 +1,6 @@
 package com.chingis.animehub.dto.create_dto
 
-data class CreateAnimeDto(
+data class AnimeCreateDTO(
     val title: String,
     val description: String,
     val genre: String,

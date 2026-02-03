@@ -1,8 +1,8 @@
 // ReviewController.kt
 package com.chingis.animehub.controller
 
-import com.chingis.animehub.dto.create_dto.CreateReviewDto
-import com.chingis.animehub.dto.update_dto.UpdateReviewDto
+import com.chingis.animehub.dto.create_dto.ReviewCreateDTO
+import com.chingis.animehub.dto.update_dto.ReviewUpdateDTO
 import com.chingis.animehub.dto.response_dto.ReviewResponseDTO
 import com.chingis.animehub.service.ReviewService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -20,7 +20,7 @@ class ReviewController(
     // чтобы получить доступ к конкретному эндпоинту.
     @PreAuthorize("hasAuthority('PERMISSION_REVIEW_CREATE')")
     fun create(
-        @RequestBody dto: CreateReviewDto,
+        @RequestBody dto: ReviewCreateDTO,
         @RequestParam userId: Long
     ): ReviewResponseDTO {
         val review = service.create(dto, userId)
@@ -35,7 +35,7 @@ class ReviewController(
     @PreAuthorize("hasAuthority('PERMISSION_REVIEW_UPDATE')")
     fun update(
         @PathVariable reviewId: Long,
-        @RequestBody dto: UpdateReviewDto,
+        @RequestBody dto: ReviewUpdateDTO,
         @RequestParam userId: Long
     ): ReviewResponseDTO {
         val review = service.update(reviewId, dto, userId)
