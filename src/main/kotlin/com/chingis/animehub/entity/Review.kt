@@ -1,25 +1,26 @@
 package com.chingis.animehub.entity
 
 import jakarta.persistence.*
-import com.fasterxml.jackson.annotation.JsonBackReference
 
 @Entity
 @Table(name = "reviews")
-data class Review (
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+class Review(
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @ManyToOne
-    // По умолчанию FK ссылается на PK целевой таблицы
-    @JoinColumn(name = "anime_id")
-    @JsonBackReference
-    var anime: Anime? = null,
+    // LAZY не подгружает данные автоматически. Сделаем подгрузку на уровне сервиса (mapToDTO)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "anime_id", nullable = false)
+    var anime: Anime,
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    var user: User? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: User,
 
     var content: String = "",
+
     var score: Int = 0
 )
 

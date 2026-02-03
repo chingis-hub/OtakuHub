@@ -1,12 +1,10 @@
 package com.chingis.animehub.entity
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "animes")
-data class Anime(
+class Anime(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
@@ -20,11 +18,8 @@ data class Anime(
     var genre: String = "",
 
     // mappedBy указывает, что сущность Review владеет связью, а именно поле Review.anime
-    // fetch = FetchType.EAGER значит, что связанные данные, подгружаются сразу вместе с основной сущностью, без отложенной загрузки
-
-    @OneToMany(mappedBy = "anime", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    @JsonManagedReference
-    var reviews: MutableList<Review> = mutableListOf(),
+    @OneToMany(mappedBy = "anime", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    val reviews: MutableList<Review> = mutableListOf(),
 
     var rating: Double = 0.0,
 
@@ -32,8 +27,7 @@ data class Anime(
     @Column(unique = true, nullable = true)
     var imageUrl: String? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studio_id")
-    @JsonBackReference
     var studio: Studio? = null
 )
