@@ -5,6 +5,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.*
 import org.springframework.stereotype.Service
 
+// UserDetailsService — это слой Spring Security, который не обязан возвращать HTTP-ответы напрямую
+// UsernameNotFoundException используется внутри Spring Security
 @Service
 class CustomUserDetailsService(
     private val userRepository: UserRepository

@@ -5,7 +5,8 @@ import com.chingis.animehub.dto.create_dto.ReviewCreateDTO
 import com.chingis.animehub.dto.update_dto.ReviewUpdateDTO
 import com.chingis.animehub.entity.Review
 import com.chingis.animehub.repository.*
-
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,7 +23,7 @@ class ReviewService(
         val anime = animeRepository.findByTitle(dto.animeTitle)
 
         val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("User $userId not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "User $userId not found") }
 
         val review = Review(
             user = user,
@@ -43,11 +44,11 @@ class ReviewService(
     @Transactional
     fun update(reviewId: Long, dto: ReviewUpdateDTO, userId: Long): Review {
         val review = reviewRepository.findById(reviewId)
-            .orElseThrow { IllegalArgumentException("Review $reviewId not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Review $reviewId not found") }
 
         // является ли юзер владельцем этого отзыва
         if (review.user.id != userId) {
-            throw IllegalArgumentException("User $userId is not authorized to update this review")
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "User $userId is not authorized to update this review")
         }
 
         // обновляем поля
@@ -72,11 +73,11 @@ class ReviewService(
     @Transactional
     fun delete(reviewId: Long, userId: Long) {
         val review = reviewRepository.findById(reviewId)
-            .orElseThrow { IllegalArgumentException("Review $reviewId not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Review $reviewId not found") }
 
         // является ли юзер владельцем этого отзыва
         if (review.user.id != userId) {
-            throw IllegalArgumentException("User $userId is not authorized to delete this review")
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "User $userId is not authorized to delete this review")
         }
 
         // убираем отзыв
