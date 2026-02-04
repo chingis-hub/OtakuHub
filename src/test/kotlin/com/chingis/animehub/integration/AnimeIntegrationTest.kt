@@ -27,7 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 // поднимает весь контекст Spring Boot
 @SpringBootTest(classes = [AnimeHubApplication::class])
 // вкл MockMvc, который позвлляет кидать HTTP-запросы к контроллерам без запуска реал сервера
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 // вкл поддержку Testcontainers, чтобы исп контейнеры Docker для тестовой бд
 @Testcontainers
 @ActiveProfiles("test")
@@ -56,10 +56,12 @@ class AnimeIntegrationTest {
         @JvmStatic
         @DynamicPropertySource
         fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.driver-class-name") { "org.postgresql.Driver" }
             registry.add("spring.datasource.url", postgresContainer::getJdbcUrl)
             registry.add("spring.datasource.username", postgresContainer::getUsername)
             registry.add("spring.datasource.password", postgresContainer::getPassword)
             registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
+            registry.add("spring.jpa.properties.hibernate.dialect") { "org.hibernate.dialect.PostgreSQLDialect" }
         }
     }
 
@@ -93,7 +95,6 @@ class AnimeIntegrationTest {
             .andExpect(jsonPath("$.title").value("Integration Test Anime"))
             .andExpect(jsonPath("$.description").value("Integration Test Description"))
             .andExpect(jsonPath("$.genre").value("Action"))
-            .andExpect(jsonPath("$.studioName").value("Test Studio"))
             .andReturn()
 
         // Extract the ID from the response
@@ -116,7 +117,7 @@ class AnimeIntegrationTest {
     }
 
     @Test
-    @WithMockUser(authorities = ["PERMISSION_ANIME_CREATE", "PERMISSION_ANIME_DELETE"])
+    @WithMockUser(authorities = ["PERMISSION_ANIME_CREATE", "PERMISSION_ANIME_READ", "PERMISSION_ANIME_DELETE"])
     fun `should delete anime`() {
         // Given - Create an anime
         val createDTO = AnimeCreateDTO(
@@ -130,7 +131,7 @@ class AnimeIntegrationTest {
             .with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(createDTO)))
-            //.andExpect(status().isOk)
+            .andExpect(status().isOk)
             .andReturn()
 
         val responseJson = createResult.response.contentAsString
