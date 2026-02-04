@@ -23,7 +23,7 @@ class AnimeService(
 ) {
     fun create(dto: AnimeCreateDTO): AnimeResponseDTO {
         val studio = studioRepository.findById(dto.studioId)
-            .orElseThrow { RuntimeException("Studio with id '${dto.studioId}' not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Studio with id '${dto.studioId}' not found") }
 
         val anime = Anime(
             title = dto.title,
@@ -36,9 +36,19 @@ class AnimeService(
         return mapToDTO(savedAnime)
     }
 
+    fun getById(id: Long): AnimeResponseDTO {
+        val anime = repository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Anime with id $id not found") }
+        return mapToDTO(anime)
+    }
+
+    fun getByTitle(title: String): AnimeResponseDTO = mapToDTO(repository.findByTitle(title))
+
+    fun getAll(): List<AnimeResponseDTO> = repository.findAll().map { mapToDTO(it) }
+
     fun update(id: Long, dto: AnimeUpdateDTO): AnimeResponseDTO {
         val anime = repository.findById(id)
-            .orElseThrow { RuntimeException("Anime not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Anime with id $id not found") }
 
         anime.title = dto.title
         anime.description = dto.description
@@ -58,26 +68,21 @@ class AnimeService(
     }
 
     fun delete(id: Long) {
+        if (!repository.existsById(id)) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot delete: Anime with id $id not found")
+        }
         repository.deleteById(id)
     }
-
-    fun getById(id: Long): AnimeResponseDTO {
-        val anime = repository.findById(id)
-            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Anime with id $id not found") }
-        return mapToDTO(anime)
-    }
-
-    fun getByTitle(title: String): AnimeResponseDTO = mapToDTO(repository.findByTitle(title))
-
-    fun getAll(): List<AnimeResponseDTO> = repository.findAll().map { mapToDTO(it) }
 
     fun uploadImage(id: Long, file: MultipartFile): AnimeResponseDTO {
         // Проверка типа файла
         val allowedTypes = listOf("image/jpeg", "image/png", "image/gif")
         if (!allowedTypes.contains(file.contentType)) {
-            throw IllegalArgumentException("Unsupported file type. Allowed types: JPEG, PNG, GIF")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unsupported file type. Allowed types: JPEG, PNG, GIF")
         }
-        val anime = repository.findById(id).orElseThrow { RuntimeException("Anime not found") }
+
+        val anime = repository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Anime with id $id not found") }
 
         // папка для сохранения файлов (подпапка anime)
         // dir — это путь к папке uploads/anime
@@ -122,7 +127,7 @@ class AnimeService(
                     id = it.id,
                     name = it.name
                 )
-            } ?: throw RuntimeException("Anime must have a studio")
+            } ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Anime must have a studio")
         )
     }
 }
