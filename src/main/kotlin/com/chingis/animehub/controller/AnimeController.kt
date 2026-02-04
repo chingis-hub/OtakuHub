@@ -20,6 +20,11 @@ class AnimeController(
     fun create(@RequestBody dto: AnimeCreateDTO): AnimeResponseDTO {
         return service.create(dto)
     }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
+    fun getById(@PathVariable id: Long): AnimeResponseDTO {
+        return service.getById(id)
+    }
 
     @GetMapping("/title/{title}")
     @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")

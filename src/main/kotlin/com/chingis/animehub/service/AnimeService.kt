@@ -10,6 +10,8 @@ import com.chingis.animehub.dto.response_dto.AnimeStudioResponseDTO
 import com.chingis.animehub.dto.response_dto.ReviewResponseDTO
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.server.ResponseStatusException
+import org.springframework.http.HttpStatus
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
@@ -57,6 +59,12 @@ class AnimeService(
 
     fun delete(id: Long) {
         repository.deleteById(id)
+    }
+
+    fun getById(id: Long): AnimeResponseDTO {
+        val anime = repository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Anime with id $id not found") }
+        return mapToDTO(anime)
     }
 
     fun getByTitle(title: String): AnimeResponseDTO = mapToDTO(repository.findByTitle(title))
