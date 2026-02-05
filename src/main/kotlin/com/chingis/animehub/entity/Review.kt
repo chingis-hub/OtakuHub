@@ -13,11 +13,11 @@ class Review(
     // LAZY не подгружает данные автоматически. Сделаем подгрузку на уровне сервиса (mapToDTO)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "anime_id", nullable = false)
-    var anime: Anime,
+    var anime: Anime = Anime(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    var user: User,
+    var user: User = User(),
 
     var content: String = "",
 
