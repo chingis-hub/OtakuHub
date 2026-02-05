@@ -18,7 +18,7 @@ class ReviewController(
     @PostMapping
     // Spring Security требует у пользователя определенные возможности,
     // чтобы получить доступ к конкретному эндпоинту.
-    @PreAuthorize("hasAuthority('REVIEW_CREATE')")
+    @PreAuthorize("hasAuthority('PERMISSION_REVIEW_CREATE')")
     fun create(
         @RequestBody dto: ReviewCreateDTO,
         @RequestParam userId: Long
@@ -32,7 +32,7 @@ class ReviewController(
     }
 
     @PutMapping("/{reviewId}")
-    @PreAuthorize("hasAuthority('REVIEW_UPDATE')")
+    @PreAuthorize("hasAuthority('PERMISSION_REVIEW_UPDATE')")
     fun update(
         @PathVariable reviewId: Long,
         @RequestBody dto: ReviewUpdateDTO,
@@ -47,7 +47,7 @@ class ReviewController(
     }
 
     @DeleteMapping("/{reviewId}")
-    @PreAuthorize("hasAuthority('REVIEW_DELETE')")
+    @PreAuthorize("hasAuthority('PERMISSION_REVIEW_DELETE')")
     fun delete(
         @PathVariable reviewId: Long,
         @RequestParam userId: Long

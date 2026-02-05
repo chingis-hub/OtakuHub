@@ -16,30 +16,30 @@ class AnimeController(
     private val service: AnimeService
 ) {
     @PostMapping
-    @PreAuthorize("hasAuthority('ANIME_CREATE')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_CREATE')")
     fun create(@RequestBody dto: AnimeCreateDTO): AnimeResponseDTO {
         return service.create(dto)
     }
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ANIME_READ')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
     fun getById(@PathVariable id: Long): AnimeResponseDTO {
         return service.getById(id)
     }
 
     @GetMapping("/title/{title}")
-    @PreAuthorize("hasAuthority('ANIME_READ')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_READ')")
     fun getByTitle(@PathVariable title: String): AnimeResponseDTO {
         return service.getByTitle(title)
     }
 
-    @PreAuthorize("hasAuthority('ANIME_UPDATE')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_UPDATE')")
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody dto: AnimeUpdateDTO): AnimeResponseDTO {
         return service.update(id, dto)
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ANIME_DELETE')")
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_DELETE')")
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }

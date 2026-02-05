@@ -31,13 +31,13 @@ class StudioController(
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_STUDIO_READ')")
     fun getById(@PathVariable id: Long): StudioResponseDTO {
         return service.getById(id)
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_STUDIO_READ')")
     fun getAll(): List<StudioResponseDTO> {
         return service.getAll()
     }

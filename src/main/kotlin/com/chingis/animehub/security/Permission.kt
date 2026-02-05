@@ -16,6 +16,8 @@ enum class Permission {
     ANIME_LIST_UPDATE,
     ANIME_LIST_DELETE,
 
+    STUDIO_READ,
+
     USER_READ,
     USER_MANAGE
 }

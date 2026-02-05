@@ -5,6 +5,7 @@ import com.chingis.animehub.dto.auth_dto.RegisterRequestDTO
 import com.chingis.animehub.entity.User
 import com.chingis.animehub.repository.UserRepository
 import com.chingis.animehub.dto.response_dto.JwtResponseDTO
+import com.chingis.animehub.security.Role
 
 
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -36,7 +37,8 @@ class AuthService(
         val user = User(
             name = dto.username,
             email = dto.email,
-            password = encodedPassword
+            password = encodedPassword,
+            role = Role.USER
         )
 
         return userRepository.save(user)

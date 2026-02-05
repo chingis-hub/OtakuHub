@@ -11,7 +11,8 @@ enum class Role {
             Permission.ANIME_LIST_READ,
             Permission.ANIME_LIST_CREATE,
             Permission.ANIME_LIST_UPDATE,
-            Permission.ANIME_LIST_DELETE
+            Permission.ANIME_LIST_DELETE,
+            Permission.STUDIO_READ
         )
     },
     ADMIN {
