@@ -1,7 +1,7 @@
 package com.chingis.animehub.service
 
 import com.chingis.animehub.entity.User
-import com.chingis.animehub.entity.Role
+import com.chingis.animehub.security.Role
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach

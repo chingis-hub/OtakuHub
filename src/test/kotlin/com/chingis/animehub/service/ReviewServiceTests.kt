@@ -5,7 +5,7 @@ import com.chingis.animehub.dto.update_dto.ReviewUpdateDTO
 import com.chingis.animehub.entity.Anime
 import com.chingis.animehub.entity.Review
 import com.chingis.animehub.entity.User
-import com.chingis.animehub.entity.Role
+import com.chingis.animehub.security.Role
 import com.chingis.animehub.repository.AnimeRepository
 import com.chingis.animehub.repository.ReviewRepository
 import com.chingis.animehub.repository.UserRepository
