@@ -32,6 +32,7 @@ class AnimeController(
         return service.getByTitle(title)
     }
 
+    @PreAuthorize("hasAuthority('PERMISSION_ANIME_UPDATE')")
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody dto: AnimeUpdateDTO): AnimeResponseDTO {
         return service.update(id, dto)
